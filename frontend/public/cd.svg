@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <radialGradient id="discGrad" cx="42%" cy="38%" r="62%">
+      <stop offset="0%" stop-color="#8080a8"/>
+      <stop offset="40%" stop-color="#2a2a4a"/>
+      <stop offset="100%" stop-color="#0f0f1e"/>
+    </radialGradient>
+    <radialGradient id="labelGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3a3a60"/>
+      <stop offset="100%" stop-color="#1a1a30"/>
+    </radialGradient>
+    <radialGradient id="shineGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Outer edge / disc body -->
+  <circle cx="100" cy="100" r="98" fill="#0a0a14"/>
+  <circle cx="100" cy="100" r="95" fill="url(#discGrad)"/>
+
+  <!-- Iridescent rings (simulate CD rainbow effect) -->
+  <circle cx="100" cy="100" r="82" fill="none" stroke="#ff6b6b" stroke-width="1.5" opacity="0.35"/>
+  <circle cx="100" cy="100" r="79" fill="none" stroke="#ffb347" stroke-width="1.5" opacity="0.35"/>
+  <circle cx="100" cy="100" r="76" fill="none" stroke="#ffd700" stroke-width="1.5" opacity="0.35"/>
+  <circle cx="100" cy="100" r="73" fill="none" stroke="#6bcb77" stroke-width="1.5" opacity="0.35"/>
+  <circle cx="100" cy="100" r="70" fill="none" stroke="#4d96ff" stroke-width="1.5" opacity="0.35"/>
+  <circle cx="100" cy="100" r="67" fill="none" stroke="#9b59b6" stroke-width="1.5" opacity="0.35"/>
+  <circle cx="100" cy="100" r="64" fill="none" stroke="#ff6b6b" stroke-width="1"   opacity="0.25"/>
+  <circle cx="100" cy="100" r="61" fill="none" stroke="#4d96ff" stroke-width="1"   opacity="0.25"/>
+
+  <!-- Label area -->
+  <circle cx="100" cy="100" r="46" fill="url(#labelGrad)"/>
+
+  <!-- Label text -->
+  <text x="100" y="95"  text-anchor="middle" fill="#7070a0" font-size="13" font-family="Arial, sans-serif" font-weight="bold" letter-spacing="2">POD</text>
+  <text x="100" y="112" text-anchor="middle" fill="#7070a0" font-size="13" font-family="Arial, sans-serif" font-weight="bold" letter-spacing="2">BOT</text>
+
+  <!-- Center spindle hole -->
+  <circle cx="100" cy="100" r="8" fill="#050510"/>
+  <circle cx="100" cy="100" r="6" fill="#0a0a18"/>
+
+  <!-- Highlight / shine -->
+  <ellipse cx="68" cy="60" rx="22" ry="11" fill="url(#shineGrad)" transform="rotate(-40, 68, 60)"/>
+</svg>
