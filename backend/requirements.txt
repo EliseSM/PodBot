@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+python-multipart
+langchain-openai
+langchain-anthropic
+langchain-core
+langgraph
+openai
+requests
+beautifulsoup4
+pycairo
+pypdf
+python-docx
+pydub
+python-dotenv
