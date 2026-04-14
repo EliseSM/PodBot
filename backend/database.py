@@ -52,3 +52,18 @@ async def get_podcast(id: str) -> dict | None:
         async with db.execute("SELECT * FROM podcasts WHERE id = ?", (id,)) as cursor:
             row = await cursor.fetchone()
             return dict(row) if row else None
+
+
+async def list_podcasts() -> list[dict]:
+    """Return all podcasts ordered newest first, excluding internal fields."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        async with db.execute(
+            """
+            SELECT id, title, source_url, source_filename, llm_provider, created_at
+            FROM podcasts
+            ORDER BY created_at DESC
+            """
+        ) as cursor:
+            rows = await cursor.fetchall()
+            return [dict(row) for row in rows]

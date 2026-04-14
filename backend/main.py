@@ -17,7 +17,7 @@ load_dotenv()
 from agent.graph import build_graph
 from agent.llm_factory import get_llm
 from agent.state import PodcastState
-from database import init_db, save_podcast, get_podcast
+from database import init_db, save_podcast, get_podcast, list_podcasts
 from ingestion.scraper import scrape_url
 from ingestion.parser import parse_uploaded_file
 from tts.openai_tts import OpenAITTSProvider
@@ -255,6 +255,17 @@ async def ingest_file(file: UploadFile = File(...)):
         return {"text": text}
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
+
+
+# ---------------------------------------------------------------------------
+# Library endpoint
+# ---------------------------------------------------------------------------
+
+@app.get("/library")
+async def get_library():
+    """Returns all saved podcasts ordered newest first."""
+    podcasts = await list_podcasts()
+    return {"podcasts": podcasts}
 
 
 # ---------------------------------------------------------------------------

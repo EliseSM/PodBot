@@ -23,6 +23,12 @@ export async function getSharedPodcast(id) {
   return res.json()
 }
 
+export async function fetchLibrary() {
+  const res = await fetch(`${BASE}/library`)
+  if (!res.ok) throw new Error('Failed to fetch library')
+  return res.json()  // { podcasts: [...] }
+}
+
 export function openProgressStream(jobId) {
   return new EventSource(`${BASE}/progress/${jobId}`)
 }
