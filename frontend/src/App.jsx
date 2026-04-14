@@ -11,6 +11,7 @@ function App() {
   const [settings, setSettings] = useState({ llmProvider: 'openai', maxRewrites: 2 })
   const [sourceContent, setSourceContent] = useState('')
   const [originalPrompt, setOriginalPrompt] = useState('')
+  const [sourceMeta, setSourceMeta] = useState({ source_url: null, source_filename: null })
   const [isGenerating, setIsGenerating] = useState(false)
   const [progressNodes, setProgressNodes] = useState([])
   const [audioUrl, setAudioUrl] = useState(null)
@@ -18,6 +19,8 @@ function App() {
   const [scriptText, setScriptText] = useState('')
   const [error, setError] = useState(null)
   const [isDone, setIsDone] = useState(false)
+  const [shareJobId, setShareJobId] = useState(null)
+  const [copied, setCopied] = useState(false)
 
   const handleGenerate = async () => {
     setIsGenerating(true)
@@ -27,6 +30,8 @@ function App() {
     setScriptText('')
     setError(null)
     setIsDone(false)
+    setShareJobId(null)
+    setCopied(false)
 
     try {
       // 1. Start the job on the backend
@@ -35,6 +40,8 @@ function App() {
         originalPrompt,
         llmProvider: settings.llmProvider,
         maxRewrites: settings.maxRewrites,
+        sourceUrl: sourceMeta.source_url,
+        sourceFilename: sourceMeta.source_filename,
       })
 
       // 2. Stream progress events via SSE
@@ -59,6 +66,7 @@ function App() {
           setAudioBlob(blob)
           setAudioUrl(url)
           setScriptText(script)
+          setShareJobId(job_id)
           setIsDone(true)
           setIsGenerating(false)
 
@@ -103,6 +111,7 @@ function App() {
           onSourceContent={setSourceContent}
           originalPrompt={originalPrompt}
           onOriginalPrompt={setOriginalPrompt}
+          onSourceMeta={setSourceMeta}
           disabled={isGenerating}
         />
 
@@ -125,6 +134,31 @@ function App() {
         {isDone && (
           <div className="output-section">
             <CDPlayer audioUrl={audioUrl} />
+
+            {shareJobId && (
+              <div className="share-bar">
+                <span className="share-bar-label">Share this podcast</span>
+                <div className="share-bar-row">
+                  <input
+                    readOnly
+                    className="share-input"
+                    value={`${window.location.origin}/share/${shareJobId}`}
+                    onFocus={e => e.target.select()}
+                  />
+                  <button
+                    className="share-copy-btn"
+                    onClick={() => {
+                      navigator.clipboard.writeText(`${window.location.origin}/share/${shareJobId}`)
+                      setCopied(true)
+                      setTimeout(() => setCopied(false), 2000)
+                    }}
+                  >
+                    {copied ? 'Copied!' : 'Copy Link'}
+                  </button>
+                </div>
+              </div>
+            )}
+
             <ScriptViewer script={scriptText} />
             <DownloadButtons audioBlob={audioBlob} scriptText={scriptText} />
           </div>

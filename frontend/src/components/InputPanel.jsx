@@ -1,11 +1,18 @@
 import { useState } from 'react'
 import { ingestUrl, ingestFile } from '../api'
 
-function InputPanel({ sourceContent, onSourceContent, originalPrompt, onOriginalPrompt, disabled }) {
+function InputPanel({ sourceContent, onSourceContent, originalPrompt, onOriginalPrompt, onSourceMeta, disabled }) {
   const [activeTab, setActiveTab] = useState('url')
   const [urlInput, setUrlInput] = useState('')
   const [status, setStatus] = useState(null)   // { type: 'loading'|'success'|'error', message }
   const [isLoading, setIsLoading] = useState(false)
+
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId)
+    if (tabId === 'paste') {
+      onSourceMeta?.({ source_url: null, source_filename: null })
+    }
+  }
 
   const handleLoadUrl = async () => {
     if (!urlInput.trim()) return
@@ -14,6 +21,7 @@ function InputPanel({ sourceContent, onSourceContent, originalPrompt, onOriginal
     try {
       const { text } = await ingestUrl(urlInput.trim())
       onSourceContent(text)
+      onSourceMeta?.({ source_url: urlInput.trim(), source_filename: null })
       setStatus({ type: 'success', message: `Loaded ${text.length.toLocaleString()} characters` })
     } catch (err) {
       setStatus({ type: 'error', message: err.message })
@@ -30,6 +38,7 @@ function InputPanel({ sourceContent, onSourceContent, originalPrompt, onOriginal
     try {
       const { text } = await ingestFile(file)
       onSourceContent(text)
+      onSourceMeta?.({ source_url: null, source_filename: file.name })
       setStatus({ type: 'success', message: `Loaded ${text.length.toLocaleString()} characters from ${file.name}` })
     } catch (err) {
       setStatus({ type: 'error', message: err.message })
@@ -61,7 +70,7 @@ function InputPanel({ sourceContent, onSourceContent, originalPrompt, onOriginal
           <button
             key={id}
             className={`tab${activeTab === id ? ' active' : ''}`}
-            onClick={() => setActiveTab(id)}
+            onClick={() => handleTabChange(id)}
             disabled={disabled}
           >
             {label}

@@ -1,18 +1,26 @@
 const BASE = '/api'
 
-export async function startGeneration({ sourceContent, originalPrompt, llmProvider, maxRewrites }) {
+export async function startGeneration({ sourceContent, originalPrompt, llmProvider, maxRewrites, sourceUrl, sourceFilename }) {
   const res = await fetch(`${BASE}/generate`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      source_content: sourceContent,
-      original_prompt: originalPrompt || 'Podcast Episode',
-      llm_provider: llmProvider,
-      max_rewrites: maxRewrites,
+      source_content:   sourceContent,
+      original_prompt:  originalPrompt || 'Podcast Episode',
+      llm_provider:     llmProvider,
+      max_rewrites:     maxRewrites,
+      source_url:       sourceUrl || null,
+      source_filename:  sourceFilename || null,
     }),
   })
   if (!res.ok) throw new Error('Failed to start generation')
   return res.json()  // { job_id }
+}
+
+export async function getSharedPodcast(id) {
+  const res = await fetch(`${BASE}/share/${id}`)
+  if (!res.ok) throw new Error('Podcast not found')
+  return res.json()
 }
 
 export function openProgressStream(jobId) {

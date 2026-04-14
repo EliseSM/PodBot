@@ -338,16 +338,81 @@ body {
   to   { transform: rotate(360deg); }
 }
 
-.audio-element {
+/* ─── Custom player controls ─────────────────────────────────────────────── */
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   width: 100%;
   max-width: 480px;
-  accent-color: var(--accent);
 }
 
-/* Style the native audio player */
-audio::-webkit-media-controls-panel         { background: var(--bg-primary); }
-audio::-webkit-media-controls-current-time-display,
-audio::-webkit-media-controls-time-remaining-display { color: var(--text-primary); }
+.play-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, transform 0.1s;
+  box-shadow: 0 4px 16px rgba(124, 106, 232, 0.4);
+}
+.play-btn:hover  { background: var(--accent-hover); transform: scale(1.06); }
+.play-btn:active { transform: scale(0.96); }
+
+.player-timeline {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progress-bar {
+  position: relative;
+  height: 6px;
+  background: var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.progress-bar:hover .progress-thumb { opacity: 1; }
+
+.progress-fill {
+  position: absolute;
+  inset: 0;
+  right: auto;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.progress-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  background: white;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 0 0 3px rgba(124, 106, 232, 0.2);
+}
+
+.player-times {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
 
 /* ─── Script viewer ──────────────────────────────────────────────────────── */
 .script-viewer {
@@ -410,3 +475,55 @@ audio::-webkit-media-controls-time-remaining-display { color: var(--text-primary
   color: var(--accent);
 }
 .download-btn.secondary:hover { background: var(--accent-dim); }
+
+/* ─── Share bar ──────────────────────────────────────────────────────────── */
+.share-bar {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.share-bar-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.share-bar-row {
+  display: flex;
+  gap: 8px;
+}
+
+.share-input {
+  flex: 1;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  padding: 9px 12px;
+  font-size: 13px;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  cursor: text;
+}
+.share-input:focus { outline: none; border-color: var(--accent); }
+
+.share-copy-btn {
+  padding: 9px 18px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+  min-width: 96px;
+}
+.share-copy-btn:hover { background: var(--accent-hover); }
