@@ -71,6 +71,8 @@ class GenerateRequest(BaseModel):
     original_prompt: str = "Podcast Episode"
     llm_provider: str = "openai"
     max_rewrites: int = 2
+    target_duration: int = 10                        # minutes: 2, 5, 10, or 15
+    tones: list[str] = ["conversational"]            # briefing | explainer | conversational
     source_url: str | None = None
     source_filename: str | None = None
 
@@ -107,6 +109,8 @@ def run_pipeline(job_id: str, request: GenerateRequest, loop: asyncio.AbstractEv
             "critique":         "",
             "rewrites":         0,
             "max_rewrites":     request.max_rewrites,
+            "target_duration":  request.target_duration,
+            "tones":            request.tones,
             "final_script":     "",
             "audio_path":       "",
         }

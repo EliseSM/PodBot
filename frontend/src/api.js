@@ -1,6 +1,6 @@
 const BASE = '/api'
 
-export async function startGeneration({ sourceContent, originalPrompt, llmProvider, maxRewrites, sourceUrl, sourceFilename }) {
+export async function startGeneration({ sourceContent, originalPrompt, llmProvider, maxRewrites, targetDuration, tones, sourceUrl, sourceFilename }) {
   const res = await fetch(`${BASE}/generate`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -9,6 +9,8 @@ export async function startGeneration({ sourceContent, originalPrompt, llmProvid
       original_prompt:  originalPrompt || 'Podcast Episode',
       llm_provider:     llmProvider,
       max_rewrites:     maxRewrites,
+      target_duration:  targetDuration,
+      tones:            tones,
       source_url:       sourceUrl || null,
       source_filename:  sourceFilename || null,
     }),

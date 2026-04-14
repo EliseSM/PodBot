@@ -15,7 +15,7 @@ function App() {
   const [sidebarView, setSidebarView] = useState('generate')
 
   // Generation state
-  const [settings, setSettings] = useState({ llmProvider: 'openai', maxRewrites: 2 })
+  const [settings, setSettings] = useState({ llmProvider: 'openai', maxRewrites: 2, targetDuration: 10, tones: ['conversational'] })
   const [sourceContent, setSourceContent] = useState('')
   const [originalPrompt, setOriginalPrompt] = useState('')
   const [sourceMeta, setSourceMeta] = useState({ source_url: null, source_filename: null })
@@ -51,6 +51,8 @@ function App() {
         originalPrompt,
         llmProvider: settings.llmProvider,
         maxRewrites: settings.maxRewrites,
+        targetDuration: settings.targetDuration,
+        tones: settings.tones,
         sourceUrl: sourceMeta.source_url,
         sourceFilename: sourceMeta.source_filename,
       })
