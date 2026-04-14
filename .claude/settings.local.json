@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Elise/anaconda3/envs/podbot/**)",
+      "Read(//c/Users/Elise/anaconda3/pkgs/**)"
+    ]
+  }
+}

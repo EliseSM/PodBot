@@ -1,20 +1,24 @@
-from functools import partial
 from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import SystemMessage, HumanMessage
 
 from .state import PodcastState
-from .prompts import OUTLINE_PROMPT, DRAFT_PROMPT, CRITIQUE_PROMPT, REVISE_PROMPT
+from .prompts import (
+    build_outline_prompt,
+    build_draft_prompt,
+    build_revise_prompt,
+    CRITIQUE_PROMPT,
+)
 
 # Truncation limits — keeps token usage manageable while preserving key content.
 # GPT-4o and Claude Sonnet both support 128k context; these are conservative.
-SOURCE_LIMIT_FULL = 15_000   # chars — used where source is the primary input
-SOURCE_LIMIT_SHORT = 5_000   # chars — used as accuracy reference in critique/revise
+SOURCE_LIMIT_FULL  = 15_000   # chars — used where source is the primary input
+SOURCE_LIMIT_SHORT =  5_000   # chars — used as accuracy reference in critique/revise
 
 
 def create_outline(state: PodcastState, llm: BaseChatModel) -> dict:
     """Creates a structured episode outline from the source content."""
     messages = [
-        SystemMessage(content=OUTLINE_PROMPT),
+        SystemMessage(content=build_outline_prompt(state["target_duration"], state["tones"])),
         HumanMessage(content=(
             f"Topic: {state['original_prompt']}\n\n"
             f"Source material:\n{state['source_content'][:SOURCE_LIMIT_FULL]}"
@@ -27,7 +31,7 @@ def create_outline(state: PodcastState, llm: BaseChatModel) -> dict:
 def create_draft(state: PodcastState, llm: BaseChatModel) -> dict:
     """Writes the first ALEX:/SAM: formatted podcast script from the outline."""
     messages = [
-        SystemMessage(content=DRAFT_PROMPT),
+        SystemMessage(content=build_draft_prompt(state["target_duration"], state["tones"])),
         HumanMessage(content=(
             f"Outline:\n{state['outline']}\n\n"
             f"Source material:\n{state['source_content'][:SOURCE_LIMIT_FULL]}"
@@ -53,7 +57,7 @@ def critique_draft(state: PodcastState, llm: BaseChatModel) -> dict:
 def revise_draft(state: PodcastState, llm: BaseChatModel) -> dict:
     """Rewrites the draft applying all critique feedback. Increments the rewrite counter."""
     messages = [
-        SystemMessage(content=REVISE_PROMPT),
+        SystemMessage(content=build_revise_prompt(state["target_duration"], state["tones"])),
         HumanMessage(content=(
             f"Original script:\n{state['draft']}\n\n"
             f"Editorial feedback:\n{state['critique']}\n\n"

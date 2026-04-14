@@ -1,7 +1,56 @@
+const DURATION_OPTIONS = [2, 5, 10, 15]
+
+const TONE_OPTIONS = [
+  { id: 'briefing',       label: 'Briefing',       sub: 'Fast, factual'      },
+  { id: 'explainer',      label: 'Explainer',       sub: 'Clear, structured'  },
+  { id: 'conversational', label: 'Conversational',  sub: 'Casual, engaging'   },
+]
+
 function SettingsPanel({ settings, onChange, disabled }) {
+  const toggleTone = (id) => {
+    const next = settings.tones.includes(id)
+      ? settings.tones.filter(t => t !== id)
+      : [...settings.tones, id]
+    if (next.length === 0) return   // always keep at least one tone
+    onChange({ ...settings, tones: next })
+  }
+
   return (
     <div>
       <p className="settings-title">Settings</p>
+
+      <div className="setting-group">
+        <label className="setting-label">Podcast Length</label>
+        <div className="duration-options">
+          {DURATION_OPTIONS.map(mins => (
+            <button
+              key={mins}
+              className={`duration-btn${settings.targetDuration === mins ? ' active' : ''}`}
+              onClick={() => onChange({ ...settings, targetDuration: mins })}
+              disabled={disabled}
+            >
+              {mins}m
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="setting-group">
+        <label className="setting-label">Tone</label>
+        <div className="tone-options">
+          {TONE_OPTIONS.map(({ id, label, sub }) => (
+            <button
+              key={id}
+              className={`tone-btn${settings.tones.includes(id) ? ' active' : ''}`}
+              onClick={() => toggleTone(id)}
+              disabled={disabled}
+            >
+              <span className="tone-btn-label">{label}</span>
+              <span className="tone-btn-sub">{sub}</span>
+            </button>
+          ))}
+        </div>
+      </div>
 
       <div className="setting-group">
         <label className="setting-label">LLM Provider</label>
